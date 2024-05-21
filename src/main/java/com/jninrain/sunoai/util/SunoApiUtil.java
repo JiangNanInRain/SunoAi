@@ -264,7 +264,7 @@ public class SunoApiUtil {
 //        json.put("prompt","吉吉国王和毛毛抢蜂蜜");
 //        res = SunoApiUtil.generateMusic(json);
         //{"msg":"success","code":0,"data":[{"meta_prompt":"吉吉国王和毛毛抢蜂蜜","title":"吉吉国王和蜂蜜","meta_tags":"民谣","song_id":"f193ff87-78b0-41d9-b280-2ae92e761c92","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"},{"meta_prompt":"吉吉国王和毛毛抢蜂蜜","title":"吉吉国王和蜂蜜","meta_tags":"民谣","song_id":"448dae58-d3c4-4881-8871-abf528a48603","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"}]}
-        res = SunoApiUtil.generateConcat("dae58-d3c4-4881-8871-abf528a48603");
+        res = SunoApiUtil.generateConcat("224c1649-d83c-4fcf-b901-d5ce9574ac76");
         System.out.println(res.toJSONString());
     }
 
