@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.jninrain.sunoai.util.Http.HttpCommon;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.json.JSONArray;
 import sun.security.provider.Sun;
 
 import java.util.HashMap;
@@ -86,9 +87,10 @@ public class SunoApiUtil {
      *
      * @param prompt            对音乐的描述
      * @param AbsoluteMusic     是否是纯音乐
+     * @param AbsoluteMusic     是否是纯音乐
      * @return
      */
-    public static  com.alibaba.fastjson.JSONObject generateMusicOnlyByPrompt(String prompt,Boolean AbsoluteMusic){
+    public static  com.alibaba.fastjson.JSONObject generateMusicOnlyByPrompt(String prompt,Boolean AbsoluteMusic,String model_name){
         //请求参数
         Map<String ,String > parameters = new HashMap<>(1);
 
@@ -100,12 +102,13 @@ public class SunoApiUtil {
         JSONObject body = new JSONObject();
         body.put("gpt_description_prompt",prompt);
         body.put("make_instrumental",AbsoluteMusic);
+        body.put("model_name",model_name);
 
         com.alibaba.fastjson.JSONObject res = null;
         try{
             log.info("调用SunoAPi接口 ：https://api.sunoaiapi.com/api/v1/gateway/generate/gpt_desc");
             res = HttpCommon.postHttpRequestFastJson(host,"/generate/gpt_desc",parameters,head,body,null);
-            log.info("返回结果: "+res.toJSONString());
+            log.info("返回Song结果: "+res.toJSONString());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -119,22 +122,28 @@ public class SunoApiUtil {
      * @param ids    查询的SongId列表
      * @return
      */
-    public static com.alibaba.fastjson.JSONObject queryGenerateResult(String... ids){
+    public static JSONArray queryGenerateResult(String... ids){
         //请求参数
         Map<String ,String > parameters = new HashMap<>(1);
-        for (String id:ids){
-            parameters.put("id",id);
+        String idList = "";
+        for(int i = 0;i< ids.length;i++){
+            idList+=ids[i];
+            if(i!= ids.length-1){
+                idList+=",";
+            }
         }
+        parameters.put("ids",idList);
+
 
         //请求头
         Map<String ,String> head = new HashMap<>(1);
         head.put("api-key",ApiKey);
 
-        com.alibaba.fastjson.JSONObject res = null;
+        JSONArray res = null;
         try{
             log.info("调用SunoAPi接口 ：https://api.sunoaiapi.com/api/v1/gateway/query");
-            res = HttpCommon.getHttpRequestFastJson(host,"/query",parameters,head);
-            log.info("返回结果: "+res.toJSONString());
+            res = HttpCommon.getHttpRequestFastJsonList(host,"/query",parameters,head);
+            log.info("返回歌曲结果: " +res.toString());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -211,7 +220,7 @@ public class SunoApiUtil {
         return res;
     }
 
-    /**
+    /**(坏掉的)
      * 音频合并接口
      *
      * @param clipId
@@ -232,6 +241,7 @@ public class SunoApiUtil {
         com.alibaba.fastjson.JSONObject res = null;
         try{
             log.info("调用SunoAPi接口 ：https://api.sunoaiapi.com/api/v1/gateway/generate/concat");
+
             res = HttpCommon.postHttpRequestFastJson(host,"/generate/concat",parameters,head,body,null);
             log.info("返回结果: "+res.toJSONString());
         }catch (Exception e){
@@ -242,7 +252,7 @@ public class SunoApiUtil {
     }
     //测试工具类
     public static void main(String[] args) {
-        JSONObject res = null;
+        JSONArray res = null;
         //res = SunoApiUtil.generateLyricsByPrompt("吉吉国王爱吃香蕉");
          //{"msg":"success","code":0,"data":{"id":"224c1649-d83c-4fcf-b901-d5ce9574ac76"}}
 
@@ -255,7 +265,10 @@ public class SunoApiUtil {
         //res = SunoApiUtil.generateMusicOnlyByPrompt("吉吉国王超级喜欢吃香蕉",false);
         //{"msg":"success","code":0,"data":[{"meta_prompt":"","title":"","song_id":"ca8ab5ca-d57a-4605-9b32-fafad1646314","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"},{"meta_prompt":"","title":"","song_id":"2f47c9ba-2975-4ae7-884e-5b6690151da3","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"}]}
 
-        //res = SunoApiUtil.queryGenerateResult("ca8ab5ca-d57a-4605-9b32-fafad1646314","2f47c9ba-2975-4ae7-884e-5b6690151da3");
+        res = SunoApiUtil.queryGenerateResult("9ec7f657-7542-4de1-a7ce-59bdb7edbefb");
+        System.out.println(res);
+        //[{"id":"2f47c9ba-2975-4ae7-884e-5b6690151da3","model_name":"chirp-v3","created_at":"2024-05-21T09:21:27","meta_data":{"tags":"节奏感强 流行 欢快","prompt":"[Verse]\n吉吉国王超级喜欢吃香蕉\n每天早晨都是她的首选\n黄色皮衣，甜到心底\n只要一口，快乐无比\n\n[Verse 2]\n无论何时，无论何地\n香蕉是她的最爱食品\n脆脆的口感，满满的能量\n让她精神焕发，快乐满溢\n\n[Chorus]\n吉吉国王，香蕉狂热追踪\n吃得嘴巴欢快开张\n香蕉飞舞，热情蔓延\n跳舞庆祝，快乐洋溢","gpt_description_prompt":"吉吉国王超级喜欢吃香蕉","audio_prompt_id":null,"history":null,"concat_history":null,"type":"gen","duration":120.0,"refund_credits":false,"stream":true,"error_type":null,"error_message":null},"is_liked":false,"status":"complete","video_url":"https://cdn1.suno.ai/2f47c9ba-2975-4ae7-884e-5b6690151da3.mp4","user_id":"133df692-5ccc-4932-92cc-9230a576bf30","title":"香蕉狂想曲","audio_url":"https://cdn1.suno.ai/2f47c9ba-2975-4ae7-884e-5b6690151da3.mp3","display_name":"HypnoticEthnic115","play_count":0,"image_url":"https://cdn1.suno.ai/image_2f47c9ba-2975-4ae7-884e-5b6690151da3.png","handle":"hypnoticethnic115","upvote_count":0,"image_large_url":"https://cdn1.suno.ai/image_large_2f47c9ba-2975-4ae7-884e-5b6690151da3.png","is_handle_updated":false,"is_public":false,"is_video_pending":false,"is_trashed":false,"major_model_version":"v3","reaction":null}]
+        //System.out.println(res.toString());
         //{"code":0,"msg":"success","data":[{"user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","song_id":"43bc3a75-2d03-4cb0-8bd0-47e0bf012114","status":"submitted","title":"","image_large_url":null,"image_url":null,"model_name":"chirp-v3","video_url":"","audio_url":"","meta_tags":null,"meta_prompt":"","meta_duration":null,"meta_error_msg":null,"meta_error_type":null},{"user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","song_id":"82b94364-97e0-40a1-b40b-28e4f0065ace","status":"submitted","title":"","image_large_url":null,"image_url":null,"model_name":"chirp-v3","video_url":"","audio_url":"","meta_tags":null,"meta_prompt":"","meta_duration":null,"meta_error_msg":null,"meta_error_type":null}]}
 
 //        JSONObject json = new JSONObject();
@@ -264,8 +277,8 @@ public class SunoApiUtil {
 //        json.put("prompt","吉吉国王和毛毛抢蜂蜜");
 //        res = SunoApiUtil.generateMusic(json);
         //{"msg":"success","code":0,"data":[{"meta_prompt":"吉吉国王和毛毛抢蜂蜜","title":"吉吉国王和蜂蜜","meta_tags":"民谣","song_id":"f193ff87-78b0-41d9-b280-2ae92e761c92","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"},{"meta_prompt":"吉吉国王和毛毛抢蜂蜜","title":"吉吉国王和蜂蜜","meta_tags":"民谣","song_id":"448dae58-d3c4-4881-8871-abf528a48603","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"}]}
-        res = SunoApiUtil.generateConcat("224c1649-d83c-4fcf-b901-d5ce9574ac76");
-        System.out.println(res.toJSONString());
+//        res = SunoApiUtil.generateConcat("224c1649-d83c-4fcf-b901-d5ce9574ac76");
+//        System.out.println(res.toJSONString());
     }
 
 

@@ -1,5 +1,6 @@
 package com.jninrain.sunoai.util.Http;
 
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -1438,5 +1439,61 @@ public class HttpCommon {
         httpClient.close();
         log.info("http访问接口返回值[GET]"+json);
         return json;
+    }
+
+
+    /**
+     * httpGET请求(fastJson)返回JSON列表
+     *
+     * @param url        访问地址 (http://或者 https://)
+     * @param path       接口路径
+     * @param parameters 参数(Map传参)
+     * @param heads     头文件(Map传参)
+     * @return
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws URISyntaxException
+     * @author 顾继钞
+     * @date 2018年9月11日 上午9:02:20
+     */
+    public static JSONArray getHttpRequestFastJsonList(String url, String path, Map<String, String> parameters,
+                                                                         Map<String, String> heads) throws ClientProtocolException, IOException, URISyntaxException {
+        String[] urls = url.split("://");
+        URIBuilder uri = new URIBuilder().setScheme(urls[0]).setHost(urls[1] + path);
+        // 设置url传参
+        if (null != parameters) {
+            fillUri(uri, parameters);
+        }
+        log.info("http访问接口[GET]"+uri.build());
+        HttpGet httpGet = new HttpGet(uri.build());
+        // 设置头文件,给httpPost添加http请求头部：包含Content-Type、Accept、source、COOKIE信息
+        if (null != heads) {
+            for (Map.Entry<String, String> entry : heads.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                httpGet.setHeader(key, value);
+            }
+        }
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+         JSONArray jsonArray= null;
+        CloseableHttpResponse response = null;
+        try {
+            response = httpClient.execute(httpGet);
+            HttpEntity entity = response.getEntity();
+            if (entity != null) {
+                InputStream instream = entity.getContent();
+                String result = IOUtils.toString(instream, "UTF-8");
+                 jsonArray =  JSONArray.fromObject(result);
+
+
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        httpClient.close();
+        log.info("http访问接口返回值[GET]"+jsonArray);
+        return jsonArray;
     }
 }
