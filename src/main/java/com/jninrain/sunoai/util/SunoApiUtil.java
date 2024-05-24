@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import sun.security.provider.Sun;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -173,8 +176,8 @@ public class SunoApiUtil {
         body.put("tags",json.getString("tags"));   //音乐风格（英文逗号隔开）
         body.put("prompt",json.getString("prompt"));//音乐描述
         //非必要参数
-        if(null!=json.getString("mv")){ //模型参数
-            body.put("mv",json.getString("mv"));
+        if(null!=json.getString("model_name")){ //模型参数
+            body.put("mv",json.getString("model_name"));
         }
         if(null!=json.getInteger("continue_at")){//从第几秒开始继续创作
             body.put("continue_at",json.getString("continue_at"));
@@ -250,13 +253,15 @@ public class SunoApiUtil {
 
         return res;
     }
+
     //测试工具类
     public static void main(String[] args) {
-        JSONArray res = null;
+        JSONObject res = null;
         //res = SunoApiUtil.generateLyricsByPrompt("吉吉国王爱吃香蕉");
-         //{"msg":"success","code":0,"data":{"id":"224c1649-d83c-4fcf-b901-d5ce9574ac76"}}
+        // {"msg":"success","code":0,"data":{"id":"224c1649-d83c-4fcf-b901-d5ce9574ac76"}}
 
-        //res = SunoApiUtil.queryLyrics("224c1649-d83c-4fcf-b901-d5ce9574ac76");
+        res = SunoApiUtil.queryLyrics("2b9c229d-bd32-4f51-b652-f28cef54922e");
+        System.out.println(res.toJSONString());
         //{"msg":"success","code":0,"data":{"user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","text":"[Verse]\n吉吉国王，心爱香蕉，\n一口咬下，满嘴黄金，\n甜甜的味道，让人陶醉，\n咔嚓一声，尽情享受。\n\n[Verse 2]\n大街小巷，吉吉欢蹦跳，\n手里香蕉，一副淘气嘴，\n嗅到香味，忍不住呼哧呼哧，\n大快朵颐，真是太美妙。\n\n[Chorus]\n香蕉，香蕉，黄皮黄心，\n吉吉国王最心仪的食物，\n食之无忌，快乐满满，\n一起来嚼上一口，香蕉的乐章。","id":36383,"title":"香蕉狂想曲","lyrics_id":"224c1649-d83c-4fcf-b901-d5ce9574ac76"}}
 
         //res = SunoApiUtil.queryLimit();
@@ -265,8 +270,8 @@ public class SunoApiUtil {
         //res = SunoApiUtil.generateMusicOnlyByPrompt("吉吉国王超级喜欢吃香蕉",false);
         //{"msg":"success","code":0,"data":[{"meta_prompt":"","title":"","song_id":"ca8ab5ca-d57a-4605-9b32-fafad1646314","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"},{"meta_prompt":"","title":"","song_id":"2f47c9ba-2975-4ae7-884e-5b6690151da3","video_url":"","model_name":"chirp-v3","user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","audio_url":"","status":"submitted"}]}
 
-        res = SunoApiUtil.queryGenerateResult("9ec7f657-7542-4de1-a7ce-59bdb7edbefb");
-        System.out.println(res);
+//        res = SunoApiUtil.queryGenerateResult("9ec7f657-7542-4de1-a7ce-59bdb7edbefb");
+//        System.out.println(res);
         //[{"id":"2f47c9ba-2975-4ae7-884e-5b6690151da3","model_name":"chirp-v3","created_at":"2024-05-21T09:21:27","meta_data":{"tags":"节奏感强 流行 欢快","prompt":"[Verse]\n吉吉国王超级喜欢吃香蕉\n每天早晨都是她的首选\n黄色皮衣，甜到心底\n只要一口，快乐无比\n\n[Verse 2]\n无论何时，无论何地\n香蕉是她的最爱食品\n脆脆的口感，满满的能量\n让她精神焕发，快乐满溢\n\n[Chorus]\n吉吉国王，香蕉狂热追踪\n吃得嘴巴欢快开张\n香蕉飞舞，热情蔓延\n跳舞庆祝，快乐洋溢","gpt_description_prompt":"吉吉国王超级喜欢吃香蕉","audio_prompt_id":null,"history":null,"concat_history":null,"type":"gen","duration":120.0,"refund_credits":false,"stream":true,"error_type":null,"error_message":null},"is_liked":false,"status":"complete","video_url":"https://cdn1.suno.ai/2f47c9ba-2975-4ae7-884e-5b6690151da3.mp4","user_id":"133df692-5ccc-4932-92cc-9230a576bf30","title":"香蕉狂想曲","audio_url":"https://cdn1.suno.ai/2f47c9ba-2975-4ae7-884e-5b6690151da3.mp3","display_name":"HypnoticEthnic115","play_count":0,"image_url":"https://cdn1.suno.ai/image_2f47c9ba-2975-4ae7-884e-5b6690151da3.png","handle":"hypnoticethnic115","upvote_count":0,"image_large_url":"https://cdn1.suno.ai/image_large_2f47c9ba-2975-4ae7-884e-5b6690151da3.png","is_handle_updated":false,"is_public":false,"is_video_pending":false,"is_trashed":false,"major_model_version":"v3","reaction":null}]
         //System.out.println(res.toString());
         //{"code":0,"msg":"success","data":[{"user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","song_id":"43bc3a75-2d03-4cb0-8bd0-47e0bf012114","status":"submitted","title":"","image_large_url":null,"image_url":null,"model_name":"chirp-v3","video_url":"","audio_url":"","meta_tags":null,"meta_prompt":"","meta_duration":null,"meta_error_msg":null,"meta_error_type":null},{"user_id":"EXKEHcAISbQD1qOF9NhLdq0InM22","song_id":"82b94364-97e0-40a1-b40b-28e4f0065ace","status":"submitted","title":"","image_large_url":null,"image_url":null,"model_name":"chirp-v3","video_url":"","audio_url":"","meta_tags":null,"meta_prompt":"","meta_duration":null,"meta_error_msg":null,"meta_error_type":null}]}

@@ -82,6 +82,29 @@
             <artifactId>pagehelper</artifactId>
             <version>5.3.0</version>
         </dependency>
+
+        <!--Mysql驱动-->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!--TKMybatis-->
+        <dependency>
+            <groupId>tk.mybatis</groupId>
+            <artifactId>mapper-spring-boot-starter</artifactId>
+            <version>2.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -115,7 +138,6 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.jninrain.sunoai.SunoAiApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

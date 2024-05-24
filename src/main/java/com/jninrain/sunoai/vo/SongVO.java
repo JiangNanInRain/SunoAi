@@ -1,40 +1,39 @@
-package com.jninrain.sunoai.entity;
+package com.jninrain.sunoai.vo;
 
-import com.sun.org.apache.xpath.internal.axes.AttributeIterator;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
  *
  * @Auther: fei
- * @Date: 2024/05/24/16:33
+ * @Date: 2024/05/23/10:03
  * @Description:
  */
 @Data
-@Table(name = "Song")
-public class Song {
-
+public class SongVO {
     @ApiModelProperty("歌曲Id")
     private String song_id;
-
-    @ApiModelProperty("标题")
-    private String title;
-
-    @ApiModelProperty("歌词")
-    private String lyrics;
-
-    @ApiModelProperty("音乐风格")
-    private String tags;
 
     @ApiModelProperty("用户Id")
     private String user_id;
 
+    @ApiModelProperty("音乐标题")
+    private String title;
+
+    @ApiModelProperty("模型名称")
+    private String model_name;
+
     @ApiModelProperty("创建时间")
     private Date created_time;
+
+    @ApiModelProperty("风格标签")
+    private String tags;
+
+    @ApiModelProperty("生成状态")
+    private String status;
 
     @ApiModelProperty("视频链接")
     private String video_url;
@@ -48,6 +47,15 @@ public class Song {
     @ApiModelProperty("大图片链接")
     private String image_large_url;
 
-    @ApiModelProperty("歌曲时长")
+    @ApiModelProperty("时长s")
     private Double duration;
+
+    @ApiModelProperty("歌词")
+    private String lyrics;
+
+    @ApiModelProperty("错误类型")
+    private String error_type;
+
+    @ApiModelProperty("错误信息")
+    private String error_message;
 }

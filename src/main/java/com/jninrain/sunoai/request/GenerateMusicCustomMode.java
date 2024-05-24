@@ -16,10 +16,14 @@ public class GenerateMusicCustomMode {
     @ApiModelProperty("音乐描述")
     private String prompt;
 
+    @ApiModelProperty("模型名称")
+    private String model_name;
 
+    @ApiModelProperty("音乐风格")
+    private String tags;
 
-    @ApiModelProperty("是否为纯音乐")
-    private Boolean isAbsoluteMusic;
+    @ApiModelProperty("音乐标题")
+    private String title;
 
 
 

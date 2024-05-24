@@ -1,2 +1,12 @@
 server:
   port: 23333
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+
+  datasource:
+    url: jdbc:mysql://47.106.136.86:3306/SunoAi?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 123456Panda
+    driver-class-name: com.mysql.cj.jdbc.Driver

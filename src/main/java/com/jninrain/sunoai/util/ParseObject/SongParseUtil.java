@@ -1,12 +1,11 @@
 package com.jninrain.sunoai.util.ParseObject;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.jninrain.sunoai.entity.Song;
+import com.jninrain.sunoai.vo.SongVO;
 import com.jninrain.sunoai.util.SunoApiUtil;
 import net.sf.json.JSONObject;
-import org.apache.tomcat.websocket.WsIOException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -18,7 +17,13 @@ import java.util.Date;
  */
 public class SongParseUtil {
 
-    public static Song queryOneSong(String id){
+    public static Date changStringDate(String date) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        Date creatTime = sdf.parse(date);
+        return creatTime;
+    }
+
+    public static SongVO queryOneSong(String id) throws ParseException {
         net.sf.json.JSONArray json   = SunoApiUtil.queryGenerateResult(id);
 
         JSONObject song = null;
@@ -26,12 +31,12 @@ public class SongParseUtil {
             song = (net.sf.json.JSONObject) json.get(0);
         }
         System.out.println(song.toString());
-        Song ret = new Song();
+        SongVO ret = new SongVO();
         ret.setSong_id(song.getString("id"));
         ret.setUser_id(song.getString("user_id"));
         ret.setTitle(song.getString("title"));
         ret.setModel_name(song.getString("model_name"));
-        ret.setCreated_time( song.getString("created_at"));
+        ret.setCreated_time( changStringDate(song.getString("created_at")) );
         ret.setTags(song.getJSONObject("meta_data").getString("tags"));
         ret.setStatus(song.getString("status"));
         ret.setVideo_url(song.getString("video_url"));
@@ -52,7 +57,7 @@ public class SongParseUtil {
         return ret;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         System.out.println( queryOneSong("6fa98544-f570-4394-a621-0fd36b794f52").toString());
     }
 }
