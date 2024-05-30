@@ -2,6 +2,8 @@ package com.jninrain.sunoai.service;
 
 import com.jninrain.sunoai.entity.Song;
 
+import java.util.List;
+
 /**
  * Created with IntelliJ IDEA.
  *
@@ -12,5 +14,7 @@ import com.jninrain.sunoai.entity.Song;
 public interface SongService {
 
     void addOneSong(Song song);
+
+    List<Song> getList();
 
 }

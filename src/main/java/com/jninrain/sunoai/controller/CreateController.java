@@ -66,8 +66,8 @@ public class CreateController {
         songVOList.add(songVO1);
         songVOList.add(songVO2);
 
-        songService.addOneSong(toSong(songVO1));
-        songService.addOneSong(toSong(songVO2));
+//        songService.addOneSong(toSong(songVO1));
+//        songService.addOneSong(toSong(songVO2));
 
         return ResultUtil.ok(songVOList);
     }
@@ -114,8 +114,8 @@ public class CreateController {
         songVOList.add(songVO1);
         songVOList.add(songVO2);
 
-        songService.addOneSong(toSong(songVO1));
-        songService.addOneSong(toSong(songVO2));
+//        songService.addOneSong(toSong(songVO1));
+//        songService.addOneSong(toSong(songVO2));
 
         return ResultUtil.ok(songVOList);
     }

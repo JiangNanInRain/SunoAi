@@ -6,6 +6,7 @@ import com.jninrain.sunoai.service.SongService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,5 +25,10 @@ public class SongServiceImpl implements SongService {
     @Override
     public void addOneSong(Song song) {
         songMapper.insert(song);
+    }
+
+    @Override
+    public List<Song> getList() {
+        return songMapper.selectAll();
     }
 }
