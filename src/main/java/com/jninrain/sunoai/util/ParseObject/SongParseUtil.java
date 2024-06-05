@@ -1,5 +1,6 @@
 package com.jninrain.sunoai.util.ParseObject;
 
+import com.jninrain.sunoai.entity.Song;
 import com.jninrain.sunoai.vo.SongVO;
 import com.jninrain.sunoai.util.SunoApiUtil;
 import net.sf.json.JSONObject;
@@ -23,7 +24,7 @@ public class SongParseUtil {
         return creatTime;
     }
 
-    public static SongVO queryOneSong(String id) throws ParseException {
+    public static SongVO queryOneSongVO(String id) throws ParseException {
         net.sf.json.JSONArray json   = SunoApiUtil.queryGenerateResult(id);
 
         JSONObject song = null;
@@ -57,7 +58,35 @@ public class SongParseUtil {
         return ret;
     }
 
+    public static Song queryOneSong(String id) throws ParseException {
+        net.sf.json.JSONArray json   = SunoApiUtil.queryGenerateResult(id);
+
+        JSONObject song = null;
+        if (json != null) {
+            song = (net.sf.json.JSONObject) json.get(0);
+        }
+        System.out.println(song.toString());
+        Song ret = new Song();
+        ret.setId(song.getString("id"));
+        ret.setVideo_url(song.getString("video_url"));
+        ret.setUser_id(song.getString("user_id"));
+        ret.setTitle(song.getString("title"));
+        ret.setAudio_url(song.getString("audio_url"));
+        ret.setPlay_count(song.getInt("play_count"));
+        ret.setImage_url(song.getString("image_url"));
+        ret.setUpvote_count(song.getInt("upvote_count"));
+        ret.setImage_large_url(song.getString("image_large_url"));
+        ret.set_public(song.getBoolean("is_public"));
+        ret.setMajor_model_version(song.getString("major_model_version"));
+        ret.setCreated_at( changStringDate(song.getString("created_at")) );
+        ret.setLyrics(song.getJSONObject("meta_data").getString("prompt"));
+        ret.setDuration(song.getJSONObject("meta_data").getDouble("duration"));
+
+
+        return ret;
+    }
+
     public static void main(String[] args) throws ParseException {
-        System.out.println( queryOneSong("6fa98544-f570-4394-a621-0fd36b794f52").toString());
+        System.out.println( queryOneSongVO("6fa98544-f570-4394-a621-0fd36b794f52").toString());
     }
 }

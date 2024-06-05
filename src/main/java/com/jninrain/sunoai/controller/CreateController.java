@@ -61,8 +61,8 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        SongVO songVO1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
-        SongVO songVO2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
+        SongVO songVO1 =  SongParseUtil.queryOneSongVO("48e8330a-35f0-4431-8120-92e7318bb83b");
+        SongVO songVO2 = SongParseUtil.queryOneSongVO("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
         songVOList.add(songVO1);
         songVOList.add(songVO2);
 
@@ -109,8 +109,8 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        SongVO songVO1 = SongParseUtil.queryOneSong("17d22b1d-67ad-4971-a4c1-ad802b6eb7fc");
-        SongVO songVO2 = SongParseUtil.queryOneSong( "faa76e7e-191b-46a4-9983-31760e4def5c");
+        SongVO songVO1 = SongParseUtil.queryOneSongVO("17d22b1d-67ad-4971-a4c1-ad802b6eb7fc");
+        SongVO songVO2 = SongParseUtil.queryOneSongVO( "faa76e7e-191b-46a4-9983-31760e4def5c");
         songVOList.add(songVO1);
         songVOList.add(songVO2);
 
@@ -246,12 +246,10 @@ public class CreateController {
 
 
         Song song = new Song();
-        song.setSong_id(songVO.getSong_id());
         song.setTitle(songVO.getTitle());
         song.setLyrics(songVO.getLyrics());
-        song.setTags(songVO.getTags());
         song.setUser_id(songVO.getUser_id());
-        song.setCreated_time(songVO.getCreated_time());
+        song.setCreated_at(songVO.getCreated_time());
         song.setVideo_url(songVO.getVideo_url());
         song.setAudio_url(songVO.getAudio_url());
         song.setImage_url(songVO.getImage_url());

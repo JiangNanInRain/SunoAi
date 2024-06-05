@@ -98,7 +98,7 @@ public class SongController {
                     int j = 0;
                     cell = bodyRow.createCell(j);
                     cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getSong_id());
+                    cell.setCellValue(song.getId());
 
                     //标题
                     cell = bodyRow.createCell(++j);
@@ -110,10 +110,7 @@ public class SongController {
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getLyrics());
 
-                    //风格
-                    cell = bodyRow.createCell(++j);
-                    cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getTags());
+
 
                     //用户Id
                     cell = bodyRow.createCell(++j);
@@ -148,7 +145,7 @@ public class SongController {
                     //创建时间
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(formatter.format(song.getCreated_time()) );
+                    cell.setCellValue(formatter.format(song.getCreated_at()) );
                 }
 
             }
