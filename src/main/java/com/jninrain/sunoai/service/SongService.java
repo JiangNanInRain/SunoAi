@@ -1,6 +1,8 @@
 package com.jninrain.sunoai.service;
 
 import com.jninrain.sunoai.entity.Song;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -16,5 +18,7 @@ public interface SongService {
     void addOneSong(Song song);
 
     List<Song> getList();
+
+    void deleteOneSong(String song_id);
 
 }

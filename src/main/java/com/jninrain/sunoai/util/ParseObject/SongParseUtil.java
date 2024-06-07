@@ -36,7 +36,7 @@ public class SongParseUtil {
         ret.setSong_id(song.getString("id"));
         ret.setUser_id(song.getString("user_id"));
         ret.setTitle(song.getString("title"));
-        ret.setModel_name(song.getString("model_name"));
+        ret.setModel_version(song.getString("model_name"));
         ret.setCreated_time( changStringDate(song.getString("created_at")) );
         ret.setTags(song.getJSONObject("meta_data").getString("tags"));
         ret.setStatus(song.getString("status"));
@@ -48,8 +48,8 @@ public class SongParseUtil {
 
         System.out.println("duration:"+song.getJSONObject("meta_data").getString("duration"));
         ret.setLyrics(song.getJSONObject("meta_data").getString("prompt"));
-        ret.setError_type(song.getJSONObject("meta_data").getString("error_type"));
-        ret.setError_message(song.getJSONObject("meta_data").getString("error_message"));
+//        ret.setError_type(song.getJSONObject("meta_data").getString("error_type"));
+//        ret.setError_message(song.getJSONObject("meta_data").getString("error_message"));
 
 
 
@@ -76,12 +76,12 @@ public class SongParseUtil {
         ret.setImage_url(song.getString("image_url"));
         ret.setUpvote_count(song.getInt("upvote_count"));
         ret.setImage_large_url(song.getString("image_large_url"));
-        ret.set_public(song.getBoolean("is_public"));
+        ret.setIs_public(song.getBoolean("is_public"));
         ret.setMajor_model_version(song.getString("major_model_version"));
         ret.setCreated_at( changStringDate(song.getString("created_at")) );
         ret.setLyrics(song.getJSONObject("meta_data").getString("prompt"));
         ret.setDuration(song.getJSONObject("meta_data").getDouble("duration"));
-
+        ret.setTags(song.getJSONObject("meta_data").getString("tags"));
 
         return ret;
     }

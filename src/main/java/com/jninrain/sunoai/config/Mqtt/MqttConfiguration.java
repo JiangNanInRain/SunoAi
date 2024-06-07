@@ -28,10 +28,10 @@ public class MqttConfiguration {
     String topic1;
     @Value("${mqtt.topic2}")
     String topic2;
-    @Value("${mqtt.topic3}")
-    String topic3;
-    @Value("${mqtt.topic4}")
-    String topic4;
+//    @Value("${mqtt.topic3}")
+//    String topic3;
+//    @Value("${mqtt.topic4}")
+//    String topic4;
 
     @Bean//注入spring
     public MyMQTTClient myMQTTClient() {
@@ -72,19 +72,19 @@ public class MqttConfiguration {
         this.topic2 = topic2;
     }
 
-    public String getTopic3() {
-        return topic3;
-    }
-
-    public void setTopic3(String topic3) {
-        this.topic3 = topic3;
-    }
-
-    public String getTopic4() {
-        return topic4;
-    }
-
-    public void setTopic4(String topic4) {
-        this.topic4 = topic4;
-    }
+//    public String getTopic3() {
+//        return topic3;
+//    }
+//
+//    public void setTopic3(String topic3) {
+//        this.topic3 = topic3;
+//    }
+//
+//    public String getTopic4() {
+//        return topic4;
+//    }
+//
+//    public void setTopic4(String topic4) {
+//        this.topic4 = topic4;
+//    }
 }

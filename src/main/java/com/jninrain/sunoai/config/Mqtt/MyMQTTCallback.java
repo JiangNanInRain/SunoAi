@@ -69,13 +69,15 @@ public class MyMQTTCallback implements MqttCallbackExtended {
         JSONObject json  = JSON.parseObject(new String(mqttMessage.getPayload()));
         System.out.println(json.toJSONString());
         //发布消息主题
-        if (topic.equals("embed/resp")){
+        if (topic.matches("^lnsendout/yqhby2024/.+/.+/rtdata/.+$")){
+            System.out.println("设备型号:"+topic.split("/")[2]+"  设备编号:"+topic.split("/")[3]);
             Map maps = (Map) JSON.parse(new String(mqttMessage.getPayload(), CharsetUtil.UTF_8));
             //你自己的业务接口
            // insertCmdResults(maps);
         }
         //接收报警主题
-        if (topic.equals("embed/warn")){
+        if (topic.matches("^lnsendout/yqhby2024/.+/.+/alarm/.+$")){
+            System.out.println("设备型号:"+topic.split("/")[2]+"  设备编号:"+topic.split("/")[3]);
             Map maps = (Map) JSON.parse(new String(mqttMessage.getPayload(), CharsetUtil.UTF_8));
             //你自己的业务接口
             //insertPushAlarm(maps);
@@ -95,8 +97,8 @@ public class MyMQTTCallback implements MqttCallbackExtended {
         //订阅主题
         myMQTTClient.subscribe(mqttConfiguration.topic1, 1);
         myMQTTClient.subscribe(mqttConfiguration.topic2, 1);
-        myMQTTClient.subscribe(mqttConfiguration.topic3, 1);
-        myMQTTClient.subscribe(mqttConfiguration.topic4, 1);
+//        myMQTTClient.subscribe(mqttConfiguration.topic3, 1);
+//        myMQTTClient.subscribe(mqttConfiguration.topic4, 1);
     }
 
     /**

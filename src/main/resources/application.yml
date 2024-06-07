@@ -8,20 +8,28 @@ spring:
   datasource:
     url: jdbc:mysql://47.106.136.86:3306/SunoAi?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=utf-8&autoReconnect=true&useSSL=false&serverTimezone=GMT%2B8
     username: root
-    password: 123456Panda
+    password: 123456@Panda
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    password: 123456@Panda
+    host: 47.106.136.86
+    port: 6379
 
+#Redis
 
+#JWT
+signature: token!@#$%^7890
 ## MQTT##
 mqtt:
-  host: tcp://47.106.136.86:1883
-  userName: admin
-  passWord: 123456
+  host: tcp://121.43.148.177:1883
+  userName: yqhby2024
+  passWord: yqhby2024&QSIOT
   qos: 1
   clientId: ClientId_local #ClientId_local必须唯一 比如你已经定了叫ABC  那你就一直叫ABC  其他地方就不要使用ABC了
   timeout: 10
   keepalive: 20
-  topic1: A/pick/warn/#  #符号是代表整个warn下面的全部子主题 没有理解的话 可以百度仔细理解一下
-  topic2: test
-  topic3: ABCF
-  topic4: ABCH
+  topic1: lnsendout/yqhby2024/+/+/rtdata/#
+  topic2: lnsendout/yqhby2024/+/+/alarm/#
+#  topic3: ABCF
+#  topic4: ABCH
+

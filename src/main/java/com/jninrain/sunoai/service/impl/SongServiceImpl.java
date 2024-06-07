@@ -3,6 +3,8 @@ package com.jninrain.sunoai.service.impl;
 import com.jninrain.sunoai.dao.SongMapper;
 import com.jninrain.sunoai.entity.Song;
 import com.jninrain.sunoai.service.SongService;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,5 +32,11 @@ public class SongServiceImpl implements SongService {
     @Override
     public List<Song> getList() {
         return songMapper.selectAll();
+    }
+
+
+    @Override
+    public void deleteOneSong(String song_id) {
+         songMapper.deleteByPrimaryKey(song_id);
     }
 }

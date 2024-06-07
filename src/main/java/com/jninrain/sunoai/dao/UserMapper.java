@@ -1,0 +1,26 @@
+package com.jninrain.sunoai.dao;
+
+import com.jninrain.sunoai.entity.User;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
+import tk.mybatis.mapper.common.Mapper;
+
+import javax.annotation.Resource;
+
+/**
+ * Created with IntelliJ IDEA.
+ *
+ * @Auther: fei
+ * @Date: 2024/06/07/14:55
+ * @Description:
+ */
+@Repository
+public interface UserMapper extends Mapper<User> {
+
+    @Select("select  password from User where handle = #{handle}")
+    String getPwdByUserName(@Param("handle") String userName);
+
+    @Select("select uid from User where handle = #{userName} ")
+    String getIdByUserName(String userName);
+}

@@ -25,10 +25,10 @@ public class MqttController {
     String topic1;
     @Value("${mqtt.topic2}")
     String topic2;
-    @Value("${mqtt.topic3}")
-    String topic3;
-    @Value("${mqtt.topic4}")
-    String topic4;
+//    @Value("${mqtt.topic3}")
+//    String topic3;
+//    @Value("${mqtt.topic4}")
+//    String topic4;
 
 
     Queue<String> msgQueue = new LinkedList<>();
@@ -57,7 +57,7 @@ public class MqttController {
         boolean flag = msgQueue.offer(mqttMsg.toString());
         if (flag) {
             //发布消息  topic2 是你要发送到那个通道里面的主题 比如我要发送到topic2主题消息
-            myMQTTClient.publish(msgQueue.poll(), topic2);
+            myMQTTClient.publish(msgQueue.poll(), topic1);
             System.out.println("时间戳" + System.currentTimeMillis());
         }
         System.out.println("队列元素数量：" + msgQueue.size());

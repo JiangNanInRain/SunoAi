@@ -1,8 +1,12 @@
 package com.jninrain.sunoai.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jninrain.sunoai.entity.Song;
 import com.jninrain.sunoai.service.SongService;
+import com.jninrain.sunoai.util.Http.HttpCommon;
+import com.jninrain.sunoai.util.TokenParseUtil;
 import com.jninrain.sunoai.vo.LyricsVO;
 import com.jninrain.sunoai.vo.SongVO;
 import com.jninrain.sunoai.request.GenerateMusicByPromptRequest;
@@ -12,10 +16,15 @@ import com.jninrain.sunoai.util.Result.Result;
 import com.jninrain.sunoai.util.Result.ResultUtil;
 import com.jninrain.sunoai.util.SunoApiUtil;
 import io.swagger.annotations.ApiOperation;
+import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.*;
 
@@ -42,10 +51,8 @@ public class CreateController {
      */
     @ApiOperation("仅根据prompt生成音乐")
     @PostMapping("/generateMusicOnlyByPrompt")
-    public Result<List<SongVO>> generateMusicOnlyByPrompt(@RequestBody GenerateMusicByPromptRequest request) throws InterruptedException, ParseException {
-//        log.info(request.getPrompt());
-//        log.info(request.getIsAbsoluteMusic().toString());
-//        log.info(request.getModel_name());
+    public Result<List<SongVO>> generateMusicOnlyByPrompt(HttpServletRequest httpServletRequest, @RequestBody GenerateMusicByPromptRequest request) throws InterruptedException, ParseException {
+        log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateMusicOnlyByPrompt");
 //        JSONObject respond = SunoApiUtil.generateMusicOnlyByPrompt(request.getPrompt(),request.getIsAbsoluteMusic(),request.getModel_name());
 //        String song_id1 =    respond.getJSONArray("data")
 //                            .getJSONObject(0)
@@ -61,13 +68,16 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        SongVO songVO1 =  SongParseUtil.queryOneSongVO("48e8330a-35f0-4431-8120-92e7318bb83b");
-        SongVO songVO2 = SongParseUtil.queryOneSongVO("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-        songVOList.add(songVO1);
-        songVOList.add(songVO2);
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Song song1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
+        Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
+        song1.setUser_id(user_id);
+        song2.setUser_id(user_id);
+        songVOList.add(toSongVO(song1));
+        songVOList.add(toSongVO(song2));
 
-//        songService.addOneSong(toSong(songVO1));
-//        songService.addOneSong(toSong(songVO2));
+//        songService.addOneSong(song1);
+//        songService.addOneSong(song2);
 
         return ResultUtil.ok(songVOList);
     }
@@ -81,41 +91,40 @@ public class CreateController {
      */
     @ApiOperation("自定义生成音乐模式")
     @PostMapping("/generateMusicCustomMode")
-    public Result<List<SongVO>> generateMusicCustomMode(@RequestBody GenerateMusicCustomMode request) throws InterruptedException, ParseException {
-//        log.info("标题:"+request.getTitle());
-//        log.info("风格:"+request.getTags());
-//        log.info("歌词或提示词:"+request.getPrompt());
-//        log.info("模型名称:"+request.getModel_name());
-//
-//        JSONObject req = new JSONObject();
-//        req.put("title",request.getTitle());
-//        req.put("tags",request.getTags());
-//        req.put("prompt",request.getPrompt());
-//        req.put("model_name",request.getModel_name());
-//
-//        JSONObject respond = SunoApiUtil.generateMusic(req);
-//
-//        String song_id1 =    respond.getJSONArray("data")
-//                .getJSONObject(0)
-//                .getString("song_id");
-//        String song_id2 =    respond.getJSONArray("data")
-//                .getJSONObject(1)
-//                .getString("song_id");
-//        log.info("返回song_id1:"+song_id1);
-//        log.info("返回song_id2:"+song_id2);
+    public Result<List<SongVO>> generateMusicCustomMode(HttpServletRequest httpServletRequest,@RequestBody GenerateMusicCustomMode request) throws InterruptedException, ParseException {
+          log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateMusicCustomMode");
+        JSONObject req = new JSONObject();
+        req.put("title",request.getTitle());
+        req.put("tags",request.getTags());
+        req.put("prompt",request.getPrompt());
+        req.put("model_name",request.getModel_name());
+
+        JSONObject respond = SunoApiUtil.generateMusic(req);
+
+        String song_id1 =    respond.getJSONArray("data")
+                .getJSONObject(0)
+                .getString("song_id");
+        String song_id2 =    respond.getJSONArray("data")
+                .getJSONObject(1)
+                .getString("song_id");
+        log.info("返回song_id1:"+song_id1);
+        log.info("返回song_id2:"+song_id2);
         List<SongVO> songVOList = new ArrayList<>(2);
 //       String status1 =  getStatus(song_id1);
 //        String status2 =  getStatus(song_id2);
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        SongVO songVO1 = SongParseUtil.queryOneSongVO("17d22b1d-67ad-4971-a4c1-ad802b6eb7fc");
-        SongVO songVO2 = SongParseUtil.queryOneSongVO( "faa76e7e-191b-46a4-9983-31760e4def5c");
-        songVOList.add(songVO1);
-        songVOList.add(songVO2);
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Song song1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
+        Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
+        song1.setUser_id(user_id);
+        song2.setUser_id(user_id);
+        songVOList.add(toSongVO(song1));
+        songVOList.add(toSongVO(song2));
 
-//        songService.addOneSong(toSong(songVO1));
-//        songService.addOneSong(toSong(songVO2));
+//        songService.addOneSong(song1);
+//        songService.addOneSong(song2);
 
         return ResultUtil.ok(songVOList);
     }
@@ -129,8 +138,8 @@ public class CreateController {
      */
     @ApiOperation("生成歌词")
     @PostMapping("/generateLyrics")
-    public Result<LyricsVO>  generateLyricsByPrompt(@RequestBody String prompt) throws InterruptedException {
-        log.info("歌词提示词:"+prompt);
+    public Result<LyricsVO>  generateLyricsByPrompt(HttpServletRequest httpServletRequest,@RequestBody String prompt) throws InterruptedException {
+        log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateLyrics");
 
         JSONObject respond = SunoApiUtil.generateLyricsByPrompt(prompt);
         log.info("歌词生成返回结果:"+respond.toString());
@@ -160,7 +169,8 @@ public class CreateController {
      */
     @ApiOperation("随机生成风格标签")
     @GetMapping("/generateRandomStyle")
-    public Result<String> generateRandomStyle(){
+    public Result<String> generateRandomStyle(HttpServletRequest httpServletRequest){
+        log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateRandomStyle");
         String style ;
         Random ran = new Random();
         int num = ran.nextInt(10)+1;//[1,10]
@@ -242,21 +252,51 @@ public class CreateController {
         return status;
     }
 
-    public static Song toSong(SongVO songVO){
+    public static SongVO toSongVO(Song song){
 
 
-        Song song = new Song();
-        song.setTitle(songVO.getTitle());
-        song.setLyrics(songVO.getLyrics());
-        song.setUser_id(songVO.getUser_id());
-        song.setCreated_at(songVO.getCreated_time());
-        song.setVideo_url(songVO.getVideo_url());
-        song.setAudio_url(songVO.getAudio_url());
-        song.setImage_url(songVO.getImage_url());
-        song.setImage_large_url(songVO.getImage_large_url());
-        song.setDuration(songVO.getDuration());
+        SongVO songVO = new SongVO();
+        songVO.setSong_id(song.getId());
+        songVO.setUser_id(song.getUser_id());
+        songVO.setTitle(song.getTitle());
+        songVO.setModel_version(song.getMajor_model_version());
+        songVO.setCreated_time(songVO.getCreated_time());
+        songVO.setTags(song.getTags());
+        songVO.setVideo_url(song.getVideo_url());
+        songVO.setAudio_url(song.getAudio_url());
+        songVO.setImage_url(song.getImage_url());
+        songVO.setImage_large_url(song.getImage_large_url());
+        songVO.setDuration(song.getDuration());
+        songVO.setLyrics(song.getLyrics());
 
-        return song;
 
+        return songVO;
+
+    }
+
+    @GetMapping("/save")
+    public Result<JSONObject> save(HttpServletRequest httpServletRequest, String playList_Id,int page) throws InterruptedException, ParseException, IOException, URISyntaxException {
+
+//        int page=0;
+//        while (page>=0) {
+            JSONObject json = HttpCommon.getHttpRequestFastJson("https://studio-api.suno.ai/api/playlist/" + playList_Id + "/?page="+page, "", null, null);
+            JSONArray jsonArray = json.getJSONArray("playlist_clips");
+//            if(jsonArray.size()==0){
+//                break;
+//            }
+
+            for (int i = 0; i < jsonArray.size(); i++) {
+                JSONObject songJSON = jsonArray.getJSONObject(i);
+                JSONObject clip = songJSON.getJSONObject("clip");
+                System.out.println(clip.getString("id"));
+                Song song = SongParseUtil.queryOneSong(clip.getString("id"));
+                songService.addOneSong(song);
+            }
+//            page++;
+//        }
+
+
+
+        return ResultUtil.ok(json);
     }
 }

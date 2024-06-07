@@ -23,8 +23,8 @@ public class SongVO {
     @ApiModelProperty("音乐标题")
     private String title;
 
-    @ApiModelProperty("模型名称")
-    private String model_name;
+    @ApiModelProperty("模型版本")
+    private String model_version;
 
     @ApiModelProperty("创建时间")
     private Date created_time;
@@ -53,9 +53,9 @@ public class SongVO {
     @ApiModelProperty("歌词")
     private String lyrics;
 
-    @ApiModelProperty("错误类型")
-    private String error_type;
-
-    @ApiModelProperty("错误信息")
-    private String error_message;
+//    @ApiModelProperty("错误类型")
+//    private String error_type;
+//
+//    @ApiModelProperty("错误信息")
+//    private String error_message;
 }
