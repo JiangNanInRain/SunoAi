@@ -18,7 +18,7 @@ import java.util.Queue;
 @RequestMapping("/mqtt")
 public class MqttController {
 
-    @Autowired
+    //@Autowired
     private MyMQTTClient myMQTTClient;
 
     @Value("${mqtt.topic1}")

@@ -23,4 +23,7 @@ public interface UserMapper extends Mapper<User> {
 
     @Select("select uid from User where handle = #{userName} ")
     String getIdByUserName(String userName);
+
+    @Select("select display_name from User where uid = #{id}")
+    String getDisplayNameById(String id);
 }

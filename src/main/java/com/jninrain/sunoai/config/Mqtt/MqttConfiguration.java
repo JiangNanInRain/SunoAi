@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-@Configuration
+//@Configuration
 public class MqttConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(MqttConfiguration.class);
@@ -33,7 +33,7 @@ public class MqttConfiguration {
 //    @Value("${mqtt.topic4}")
 //    String topic4;
 
-    @Bean//注入spring
+    @Bean//注入spring已关闭
     public MyMQTTClient myMQTTClient() {
         MyMQTTClient myMQTTClient = new MyMQTTClient(host, username, password, clientId, timeOut, keepAlive);
         for (int i = 0; i < 10; i++) {

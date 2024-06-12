@@ -30,7 +30,7 @@ public class SongVO {
     private Date created_time;
 
     @ApiModelProperty("风格标签")
-    private String tags;
+    private String[] tags;
 
     @ApiModelProperty("生成状态")
     private String status;

@@ -1,18 +1,35 @@
 package com.jninrain.sunoai.controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jninrain.sunoai.entity.Song;
+import com.jninrain.sunoai.entity.Song_User_Like;
 import com.jninrain.sunoai.service.SongService;
+import com.jninrain.sunoai.service.Song_User_LikeService;
+import com.jninrain.sunoai.service.TagService;
+import com.jninrain.sunoai.service.UserService;
 import com.jninrain.sunoai.util.Excel.ExportUtil;
+import com.jninrain.sunoai.util.Result.Result;
+import com.jninrain.sunoai.util.Result.ResultUtil;
+import com.jninrain.sunoai.util.TokenParseUtil;
+import com.jninrain.sunoai.vo.SongCardVO;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.integration.annotation.Default;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +47,69 @@ public class SongController {
 
     @Resource
     private SongService songService;
+    @Resource
+    private TagService tagService;
+    @Resource
+    private UserService userService;
+    @Resource
+    private Song_User_LikeService song_user_likeService;
+
+
+    @ApiOperation("播放歌曲ById(播放数增加，返回音频链接)")
+    @GetMapping("/play")
+    public String playAudio(String song_id){
+        songService.updatePlayCountPlus(song_id);
+        return  songService.getPlayAudioUrl(song_id) ;
+    }
+
+    @ApiOperation("点赞")
+    @GetMapping("/upvote")
+    public boolean upvote(HttpServletRequest httpServletRequest, String song_id){
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        if(song_user_likeService.getLike(song_id,user_id)){
+
+            return false;
+        }
+        song_user_likeService.insertLike(song_id,user_id);
+        songService.upvote(song_id);
+        return true;
+    }
+
+    @ApiOperation("取消点赞")
+    @GetMapping("/cancelVote")
+    public boolean cancelVote(HttpServletRequest httpServletRequest,String song_id){
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        if(song_user_likeService.getLike(song_id,user_id)){
+            song_user_likeService.deleteLike(song_id,user_id);
+            songService.cancelVote(song_id);
+            return true;
+        }
+        return false;
+    }
+
+    @ApiOperation("根据歌曲Id得到SongCard")
+    @GetMapping("/querySongCardById")
+    public Result<SongCardVO> querySongCardById(HttpServletRequest httpServletRequest,String id){
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Boolean isLike = song_user_likeService.getLike(id,user_id);
+        Song song = songService.getSongById(id);
+        SongCardVO songCardVO = toSongCardVO(song);
+        songCardVO.setIsLike(isLike);
+        return ResultUtil.ok(songCardVO);
+    }
+
+    @ApiOperation("分页请求SongCard(可根据热度榜种类筛选)")
+    @GetMapping("/querySongCardListByPage")
+    public PageInfo<SongCardVO> querySongCardListByPage(Integer pageNum, Integer pageSize, @Param("NOW,WEEKLY,MONTHLY,ALLTIME字符串选择热度榜")  String hotDateType){
+        // 设置分页
+        PageHelper.startPage(pageNum, pageSize);
+
+        //需要分页的内容
+        List<SongCardVO> list = null;
+
+        PageInfo<SongCardVO> pageInfo = new PageInfo<SongCardVO>(list);
+        return pageInfo;
+    }
 
     @GetMapping("/exportSongExcel")
     public Map<String, Object> exportSongExcel(HttpServletResponse response){
@@ -176,4 +256,32 @@ public class SongController {
         return null;
     }
 
+    //删
+    @GetMapping("queryOneSongCard")
+    public   Result<Object> queryOneSongCard(){
+
+        return ResultUtil.ok();
+    }
+
+    @GetMapping("/test")
+    public void test(){
+        tagService.insertOneTag("hello");
+    }
+
+    public SongCardVO toSongCardVO(Song song){
+
+        String display_name = userService.getDisplayNameById(song.getUser_id());
+        SongCardVO songCardVO = new SongCardVO();
+        songCardVO.setTags(song.getTags());
+        songCardVO.setDuration(song.getDuration());
+        songCardVO.setId(song.getId());
+        songCardVO.setTitle(song.getTitle());
+        songCardVO.setImage_url(song.getImage_url());
+        songCardVO.setDisplay_name(display_name);
+        songCardVO.setPlay_count(song.getPlay_count());
+        songCardVO.setUpvote_count(song.getUpvote_count());
+       // songCardVO.setAudio_url(song.getAudio_url());
+
+        return songCardVO;
+    }
 }

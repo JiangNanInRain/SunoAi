@@ -14,4 +14,6 @@ public interface UserService {
     String getPwdByUserName(String userName);
 
     String getIdByUserName(String userName);
+
+    String getDisplayNameById(String id);
 }

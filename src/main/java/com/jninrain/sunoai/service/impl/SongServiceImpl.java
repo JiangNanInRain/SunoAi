@@ -39,4 +39,35 @@ public class SongServiceImpl implements SongService {
     public void deleteOneSong(String song_id) {
          songMapper.deleteByPrimaryKey(song_id);
     }
+
+    @Override
+    public Song getSongById(String id) {
+        return songMapper.getSongById(id);
+    }
+
+    @Override
+    public String getPlayAudioUrl(String id) {
+        return songMapper.selectAudioUrlById(id);
+    }
+
+    @Override
+    public void updatePlayCountPlus(String id) {
+        songMapper.updatePlayCountPlus(id);
+    }
+
+//    @Override
+//    public void updatePlayCountSub(String id) {
+//        songMapper.updatePlayCountSub(id);
+//    }
+
+
+    @Override
+    public void upvote(String id) {
+        songMapper.upvote(id);
+    }
+
+    @Override
+    public void cancelVote(String id) {
+        songMapper.cancelVote(id);
+    }
 }

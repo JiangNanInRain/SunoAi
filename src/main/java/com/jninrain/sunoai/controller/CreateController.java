@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.jninrain.sunoai.entity.Song;
+import com.jninrain.sunoai.entity.Tag;
 import com.jninrain.sunoai.service.SongService;
+import com.jninrain.sunoai.service.Song_TagService;
+import com.jninrain.sunoai.service.TagService;
 import com.jninrain.sunoai.util.Http.HttpCommon;
 import com.jninrain.sunoai.util.TokenParseUtil;
 import com.jninrain.sunoai.vo.LyricsVO;
@@ -15,9 +18,11 @@ import com.jninrain.sunoai.util.ParseObject.SongParseUtil;
 import com.jninrain.sunoai.util.Result.Result;
 import com.jninrain.sunoai.util.Result.ResultUtil;
 import com.jninrain.sunoai.util.SunoApiUtil;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiOperation;
 import jdk.nashorn.internal.parser.Token;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -42,6 +47,10 @@ public class CreateController {
 
     @Resource
     private SongService songService;
+    @Resource
+    private TagService tagService;
+    @Resource
+    private Song_TagService song_tagService;
     /**
      * 仅根据prompt生成音乐
      *
@@ -68,16 +77,16 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
-        Song song1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
+//      String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Song song1 =  SongParseUtil.queryOneSong("468d9eb4-a4f5-4777-950a-7f30e55b9154");
         Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-        song1.setUser_id(user_id);
-        song2.setUser_id(user_id);
+//        song1.setUser_id(user_id);
+//        song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-//        songService.addOneSong(song1);
-//        songService.addOneSong(song2);
+//        save(song1);
+//        save(song2);
 
         return ResultUtil.ok(songVOList);
     }
@@ -115,16 +124,16 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //        }
-        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+       // String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
         Song song1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
         Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-        song1.setUser_id(user_id);
-        song2.setUser_id(user_id);
+//        song1.setUser_id(user_id);
+//        song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-//        songService.addOneSong(song1);
-//        songService.addOneSong(song2);
+//        save(song1);
+//        save(song2);
 
         return ResultUtil.ok(songVOList);
     }
@@ -169,50 +178,19 @@ public class CreateController {
      */
     @ApiOperation("随机生成风格标签")
     @GetMapping("/generateRandomStyle")
-    public Result<String> generateRandomStyle(HttpServletRequest httpServletRequest){
+    public Result<List<String>> generateRandomStyle(HttpServletRequest httpServletRequest){
         log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateRandomStyle");
-        String style ;
-        Random ran = new Random();
-        int num = ran.nextInt(10)+1;//[1,10]
-
-        switch (num){
-            case 1:
-                style = "smooth dance";
-                break;
-            case 2:
-                style = "mellow uk garage";
-                break;
-            case 3:
-                style = "melodic cumbia";
-                break;
-            case 4:
-                style = "mellow house";
-                break;
-            case 5:
-                style = "bouncy anime";
-                break;
-            case 6:
-                style = "chill bedroom pop";
-                break;
-            case 7:
-                style = "powerful uk garage";
-                break;
-            case 8:
-                style = "melodic delta blues";
-                break;
-            case 9:
-                style = "chill reggae";
-                break;
-            case 10:
-                style = "dreamy swing";
-                break;
-            default:
-                style = "melodic edm";
+        Tag[] tags = tagService.selectByRandom(5);
+        List<String> res = new ArrayList<>();
+        int i=0;
+        for (Tag tag:tags){
+            res.add(tag.getContent());
         }
 
-
-        return  ResultUtil.ok(style);
+        return  ResultUtil.ok(res);
     }
+
+
     public static String getStatus(String id) throws InterruptedException {
         net.sf.json.JSONArray json   = null;
 
@@ -226,7 +204,7 @@ public class CreateController {
                 song = (net.sf.json.JSONObject) json.get(0);
             }
             status = song.getString("status");
-            thread.sleep(6000);
+            thread.sleep(1000);
             System.out.println("-----"+i+++"----");
         }while (!status.equals("complete")&&!status.equals("error"));
 
@@ -247,7 +225,7 @@ public class CreateController {
             if(null!=lyrics){
                 status = lyrics.getJSONObject("data").getString("status");
             }
-            thread.sleep(2000);
+            thread.sleep(1000);
         }while (!status.equals("complete")&&!status.equals("error"));
         return status;
     }
@@ -298,5 +276,14 @@ public class CreateController {
 
 
         return ResultUtil.ok(json);
+    }
+
+
+    public  void save(Song song){
+        songService.addOneSong(song);
+        tagService.insertTagList(song.getTags());
+        for(String tag:song.getTags()){
+            song_tagService.insertSongTagsByTagName(song.getId(),tag);
+        }
     }
 }

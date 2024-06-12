@@ -38,7 +38,7 @@ public class SongParseUtil {
         ret.setTitle(song.getString("title"));
         ret.setModel_version(song.getString("model_name"));
         ret.setCreated_time( changStringDate(song.getString("created_at")) );
-        ret.setTags(song.getJSONObject("meta_data").getString("tags"));
+        ret.setTags(song.getJSONObject("meta_data").getString("tags").split(","));
         ret.setStatus(song.getString("status"));
         ret.setVideo_url(song.getString("video_url"));
         ret.setAudio_url(song.getString("audio_url"));
@@ -81,7 +81,7 @@ public class SongParseUtil {
         ret.setCreated_at( changStringDate(song.getString("created_at")) );
         ret.setLyrics(song.getJSONObject("meta_data").getString("prompt"));
         ret.setDuration(song.getJSONObject("meta_data").getDouble("duration"));
-        ret.setTags(song.getJSONObject("meta_data").getString("tags"));
+        ret.setTags(song.getJSONObject("meta_data").getString("tags").split(","));
 
         return ret;
     }

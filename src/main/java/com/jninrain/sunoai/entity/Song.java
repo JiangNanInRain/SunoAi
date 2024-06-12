@@ -64,5 +64,5 @@ public class Song {
     private Double duration;
 
     @Transient
-    private String tags;
+    private String[] tags;
 }
