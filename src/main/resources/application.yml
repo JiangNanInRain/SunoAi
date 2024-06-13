@@ -10,6 +10,7 @@ spring:
     username: root
     password: 123456@Panda
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   redis:
     password: 123456@Panda
     host: 47.106.136.86

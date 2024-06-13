@@ -2,13 +2,12 @@ package com.jninrain.sunoai.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jninrain.sunoai.entity.PlayList;
 import com.jninrain.sunoai.entity.Song;
 import com.jninrain.sunoai.entity.Song_User_Like;
-import com.jninrain.sunoai.service.SongService;
-import com.jninrain.sunoai.service.Song_User_LikeService;
-import com.jninrain.sunoai.service.TagService;
-import com.jninrain.sunoai.service.UserService;
+import com.jninrain.sunoai.service.*;
 import com.jninrain.sunoai.util.Excel.ExportUtil;
+import com.jninrain.sunoai.util.ParseObject.SongParseUtil;
 import com.jninrain.sunoai.util.Result.Result;
 import com.jninrain.sunoai.util.Result.ResultUtil;
 import com.jninrain.sunoai.util.TokenParseUtil;
@@ -28,7 +27,9 @@ import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,10 @@ public class SongController {
     private UserService userService;
     @Resource
     private Song_User_LikeService song_user_likeService;
-
+    @Resource
+    private PlayList_SongService playList_songService;
+    @Resource
+    private PlayListService playListService;
 
     @ApiOperation("播放歌曲ById(播放数增加，返回音频链接)")
     @GetMapping("/play")
@@ -100,17 +104,29 @@ public class SongController {
 
     @ApiOperation("分页请求SongCard(可根据热度榜种类筛选)")
     @GetMapping("/querySongCardListByPage")
-    public PageInfo<SongCardVO> querySongCardListByPage(Integer pageNum, Integer pageSize, @Param("NOW,WEEKLY,MONTHLY,ALLTIME字符串选择热度榜")  String hotDateType){
+    public PageInfo<SongCardVO> querySongCardListByPage(HttpServletRequest httpServletRequest,Integer pageNum, Integer pageSize, @Param("NOW,WEEKLY,MONTHLY,ALLTIME字符串选择热度榜")  String hotDateType) throws ParseException {
+
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+
+
+        //PlayList list = playListService.getPlayListById(1);
         // 设置分页
         PageHelper.startPage(pageNum, pageSize);
-
+        String[] songIds = playList_songService.getSongIdListById(1);
         //需要分页的内容
-        List<SongCardVO> list = null;
+        List<SongCardVO> list = new ArrayList<>();
+
+        for(String songId:songIds){
+            Boolean isLike = song_user_likeService.getLike(songId,user_id);
+            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            songCardVO.setIsLike(isLike);
+            list.add(songCardVO);
+        }
 
         PageInfo<SongCardVO> pageInfo = new PageInfo<SongCardVO>(list);
         return pageInfo;
     }
-
+    @ApiOperation("下载歌曲列表Excel")
     @GetMapping("/exportSongExcel")
     public Map<String, Object> exportSongExcel(HttpServletResponse response){
 
@@ -121,7 +137,7 @@ public class SongController {
             ServletOutputStream outputStream = response.getOutputStream();
 
             String excelName = "歌曲导出表";
-            String[] titles = { "歌曲Id", "标题", "歌词", "风格", "用户Id", "视频链接", "音频链接","图片链接","大图片链接","时长","创建时间" };
+            String[] titles = { "歌曲Id", "视频链接", "用户Id","标题","音频链接","播放数", "图片链接","点赞数","大图片链接","是否公开","模型版本","创建时间","歌词",  "时长" };
 
             String fileName = new String(excelName.getBytes(), "ISO8859_1");
             // 组装附件名称和格式
@@ -180,52 +196,73 @@ public class SongController {
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getId());
 
-                    //标题
+                    //视频链接
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getTitle());
-
-                    //歌词
-                    cell = bodyRow.createCell(++j);
-                    cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getLyrics());
-
-
+                    cell.setCellValue(song.getVideo_url());
 
                     //用户Id
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getUser_id());
 
-                    //视频链接
+                    //标题
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getVideo_url());
+                    cell.setCellValue(song.getTitle());
 
                     //音频链接
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getAudio_url());
 
+                    //播放数
+                    cell = bodyRow.createCell(++j);
+                    cell.setCellStyle(bodyStyle);
+                    cell.setCellValue(song.getPlay_count());
+
                     //图片链接
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getImage_url());
+
+                    //点赞数
+                    cell = bodyRow.createCell(++j);
+                    cell.setCellStyle(bodyStyle);
+                    cell.setCellValue(song.getUpvote_count());
 
                     //大图片链接
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(song.getImage_large_url());
 
-                    //时长
+                    //是否公开
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
-                    cell.setCellValue(song.getDuration());
+                    cell.setCellValue(song.getIs_public());
+
+                    //模型版本
+                    cell = bodyRow.createCell(++j);
+                    cell.setCellStyle(bodyStyle);
+                    cell.setCellValue(song.getMajor_model_version());
+
 
                     //创建时间
                     cell = bodyRow.createCell(++j);
                     cell.setCellStyle(bodyStyle);
                     cell.setCellValue(formatter.format(song.getCreated_at()) );
+
+                    //歌词
+                    cell = bodyRow.createCell(++j);
+                    cell.setCellStyle(bodyStyle);
+                    cell.setCellValue(song.getLyrics());
+
+                    //时长
+                    cell = bodyRow.createCell(++j);
+                    cell.setCellStyle(bodyStyle);
+                    cell.setCellValue(song.getDuration());
+
+
                 }
 
             }
