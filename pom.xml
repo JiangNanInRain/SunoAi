@@ -120,6 +120,9 @@
             <artifactId>spring-integration-mqtt</artifactId>
         </dependency>
 
+
+
+        <!--666-->
         <!--Java工具类库  hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
