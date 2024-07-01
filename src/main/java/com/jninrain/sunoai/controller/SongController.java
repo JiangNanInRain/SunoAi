@@ -293,17 +293,17 @@ public class SongController {
         return null;
     }
 
-    //删
-    @GetMapping("queryOneSongCard")
-    public   Result<Object> queryOneSongCard(){
+//    //删
+//    @GetMapping("queryOneSongCard")
+//    public   Result<Object> queryOneSongCard(){
+//
+//        return ResultUtil.ok();
+//    }
 
-        return ResultUtil.ok();
-    }
-
-    @GetMapping("/test")
-    public void test(){
-        tagService.insertOneTag("hello");
-    }
+//    @GetMapping("/test")
+//    public void test(){
+//        tagService.insertOneTag("hello");
+//    }
 
     public SongCardVO toSongCardVO(Song song){
 

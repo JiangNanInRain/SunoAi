@@ -62,31 +62,31 @@ public class CreateController {
     @PostMapping("/generateMusicOnlyByPrompt")
     public Result<List<SongVO>> generateMusicOnlyByPrompt(HttpServletRequest httpServletRequest, @RequestBody GenerateMusicByPromptRequest request) throws InterruptedException, ParseException {
         log.info("["+httpServletRequest.getRemoteHost()+" ]访问接口：/create/generateMusicOnlyByPrompt");
-//        JSONObject respond = SunoApiUtil.generateMusicOnlyByPrompt(request.getPrompt(),request.getIsAbsoluteMusic(),request.getModel_name());
-//        String song_id1 =    respond.getJSONArray("data")
-//                            .getJSONObject(0)
-//                            .getString("song_id");
-//        String song_id2 =    respond.getJSONArray("data")
-//                .getJSONObject(1)
-//                .getString("song_id");
-//        log.info("返回song_id1:"+song_id1);
-//        log.info("返回song_id2:"+song_id2);
+        JSONObject respond = SunoApiUtil.generateMusicOnlyByPrompt(request.getPrompt(),request.getIsAbsoluteMusic(),request.getModel_name());
+        String song_id1 =    respond.getJSONArray("data")
+                            .getJSONObject(0)
+                            .getString("song_id");
+        String song_id2 =    respond.getJSONArray("data")
+                .getJSONObject(1)
+                .getString("song_id");
+       log.info("返回song_id1:"+song_id1);
+        log.info("返回song_id2:"+song_id2);
         List<SongVO> songVOList = new ArrayList<>(2);
-//        String status1 = getStatus(song_id1);
-//        String status2 = getStatus(song_id2);
-//        if("error".equals(status1)||"error".equals(status2)){
-//            return ResultUtil.fail("生成失败");
-//        }
-//      String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
-        Song song1 =  SongParseUtil.queryOneSong("468d9eb4-a4f5-4777-950a-7f30e55b9154");
-        Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-//        song1.setUser_id(user_id);
-//        song2.setUser_id(user_id);
+        String status1 = getStatus(song_id1);
+        String status2 = getStatus(song_id2);
+        if("error".equals(status1)||"error".equals(status2)){
+            return ResultUtil.fail("生成失败");
+       }
+     String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Song song1 =  SongParseUtil.queryOneSong(song_id1);
+        Song song2 = SongParseUtil.queryOneSong(song_id2);
+        song1.setUser_id(user_id);
+        song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-//        save(song1);
-//        save(song2);
+        save(song1);
+        save(song2);
 
         return ResultUtil.ok(songVOList);
     }
@@ -119,21 +119,21 @@ public class CreateController {
         log.info("返回song_id1:"+song_id1);
         log.info("返回song_id2:"+song_id2);
         List<SongVO> songVOList = new ArrayList<>(2);
-//       String status1 =  getStatus(song_id1);
-//        String status2 =  getStatus(song_id2);
-//        if("error".equals(status1)||"error".equals(status2)){
-//            return ResultUtil.fail("生成失败");
-//        }
-       // String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
-        Song song1 =  SongParseUtil.queryOneSong("48e8330a-35f0-4431-8120-92e7318bb83b");
-        Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-//        song1.setUser_id(user_id);
-//        song2.setUser_id(user_id);
+       String status1 =  getStatus(song_id1);
+        String status2 =  getStatus(song_id2);
+        if("error".equals(status1)||"error".equals(status2)){
+           return ResultUtil.fail("生成失败");
+       }
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        Song song1 =  SongParseUtil.queryOneSong(song_id1);
+        Song song2 = SongParseUtil.queryOneSong(song_id2);
+        song1.setUser_id(user_id);
+        song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-//        save(song1);
-//        save(song2);
+        save(song1);
+        save(song2);
 
         return ResultUtil.ok(songVOList);
     }
