@@ -77,11 +77,11 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //            return ResultUtil.fail("生成失败");
 //       }
-     String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+ //    String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
         Song song1 =  SongParseUtil.queryOneSong("468d9eb4-a4f5-4777-950a-7f30e55b9154");
         Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-        song1.setUser_id(user_id);
-        song2.setUser_id(user_id);
+ //       song1.setUser_id(user_id);
+ //       song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
@@ -124,11 +124,11 @@ public class CreateController {
 //        if("error".equals(status1)||"error".equals(status2)){
 //           return ResultUtil.fail("生成失败");
 //       }
-        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+ //       String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
         Song song1 =  SongParseUtil.queryOneSong("468d9eb4-a4f5-4777-950a-7f30e55b9154");
         Song song2 = SongParseUtil.queryOneSong("d172ac7b-8bbe-4e2a-a96e-09bb15124da1");
-        song1.setUser_id(user_id);
-        song2.setUser_id(user_id);
+   //     song1.setUser_id(user_id);
+     //   song2.setUser_id(user_id);
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
