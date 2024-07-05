@@ -34,6 +34,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public Result login( String userName, String password){
+
         String pwd = userService.getPwdByUserName(userName);
         if (pwd.equals(password)){
             String token = null;
@@ -45,11 +46,13 @@ public class LoginController {
                 token = JWTUtils.getToken(payload);
                 System.out.println(token);
             }catch (Exception e){
-                return ResultUtil.fail("错误");
+                return ResultUtil.fail("登陆失败");
             }
             return ResultUtil.ok(token);
+        }else {
+            return ResultUtil.fail("密码错误或用户不存在");
         }
 
-        return ResultUtil.fail("登录失败");
+
     }
 }
