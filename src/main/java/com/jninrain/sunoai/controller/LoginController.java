@@ -62,6 +62,9 @@ public class LoginController {
     @PostMapping("/register")
     @ApiOperation("注册")
     public Result register(@RequestBody RegisterRequest req){
+        if(null!=userService.getIdByUserName(req.getUserName())){
+            return ResultUtil.fail("用户已存在");
+        }
         User user = new User();
         user.setPassword(req.getPassword());
         user.setHandle(req.getUserName());
