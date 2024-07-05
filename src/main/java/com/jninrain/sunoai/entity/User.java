@@ -49,4 +49,6 @@ public class User {
     @ApiModelProperty("注册日期")
     private Date registration_time;
 
+    @ApiModelProperty("邮箱")
+    private String email;
 }

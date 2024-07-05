@@ -1,6 +1,7 @@
 package com.jninrain.sunoai.service;
 
 import cn.hutool.core.date.chinese.SolarTerms;
+import com.jninrain.sunoai.entity.User;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,4 +17,6 @@ public interface UserService {
     String getIdByUserName(String userName);
 
     String getDisplayNameById(String id);
+
+    boolean save(User user);
 }

@@ -1,6 +1,7 @@
 package com.jninrain.sunoai.service.impl;
 
 import com.jninrain.sunoai.dao.UserMapper;
+import com.jninrain.sunoai.entity.User;
 import com.jninrain.sunoai.service.UserService;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Service;
@@ -35,4 +36,11 @@ public class UserServiceImpl implements UserService {
     public String getDisplayNameById(String id){
         return userMapper.getDisplayNameById(id);
     }
+
+    @Override
+    public boolean save(User user) {
+        return userMapper.insert(user) > 0;
+    }
+
+
 }
