@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean save(User user) {
-        return userMapper.insert(user) > 0;
+        return userMapper.insertSelective(user) > 0;
     }
 
 

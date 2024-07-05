@@ -2,6 +2,8 @@ package com.jninrain.sunoai.entity;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -16,8 +18,9 @@ import java.util.Date;
 @Table(name = "User")
 public class User {
 
+    @Id
     @ApiModelProperty("用户ID")
-    private String uid;
+    private Long uid;
 
     @ApiModelProperty("用户名")
     private String handle;
