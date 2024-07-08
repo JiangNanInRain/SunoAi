@@ -69,6 +69,7 @@ public class LoginController {
         user.setPassword(req.getPassword());
         user.setHandle(req.getUserName());
         user.setEmail(req.getEmail());
+        user.setDisplay_name(req.getUserName());
         boolean flag = userService.save(user);
 
 

@@ -38,4 +38,5 @@ public interface SongMapper extends Mapper<Song> {
 
     @Select("select id from Song where user_id = #{id}")
     String[] getSongIdListByUserId(Long id);
+
 }
