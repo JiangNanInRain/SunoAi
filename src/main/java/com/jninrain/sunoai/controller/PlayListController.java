@@ -66,7 +66,7 @@ public class PlayListController {
 
         for(String songId:songIds){
             Boolean isLike = song_user_likeService.getLike(songId,user_id);
-            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            SongCardVO songCardVO = toSongCardVO(songService.getSongById(songId));
             songCardVO.setIsLike(isLike);
             songList.add(songCardVO);
         }

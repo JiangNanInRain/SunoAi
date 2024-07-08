@@ -142,7 +142,7 @@ public class SongController {
 
         for(String songId:songIds){
             Boolean isLike = song_user_likeService.getLike(songId,user_id);
-            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            SongCardVO songCardVO = toSongCardVO( songService.getSongById(songId));
             songCardVO.setIsLike(isLike);
             list.add(songCardVO);
         }
@@ -168,7 +168,7 @@ public class SongController {
 
         for(String songId:songIds){
             Boolean isLike = song_user_likeService.getLike(songId,user_id);
-            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            SongCardVO songCardVO = toSongCardVO(songService.getSongById(songId));
             songCardVO.setIsLike(isLike);
             list.add(songCardVO);
         }

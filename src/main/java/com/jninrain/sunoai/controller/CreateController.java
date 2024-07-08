@@ -79,15 +79,17 @@ public class CreateController {
        }
      String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
         Song song1 =  SongParseUtil.queryOneSong(song_id1);
-        Song song2 = SongParseUtil.queryOneSong(song_id2);
         song1.setUser_id(user_id);
+        save(song1);
+        Song song2 = SongParseUtil.queryOneSong(song_id2);
         song2.setUser_id(user_id);
+        save(song2);
         System.out.println(user_id+"用户创建了歌曲");
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-        save(song1);
-        save(song2);
+
+
 
         return ResultUtil.ok(songVOList);
     }
@@ -127,14 +129,16 @@ public class CreateController {
        }
         String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
         Song song1 =  SongParseUtil.queryOneSong(song_id1);
-        Song song2 = SongParseUtil.queryOneSong(song_id2);
         song1.setUser_id(user_id);
+        save(song1);
+        Song song2 = SongParseUtil.queryOneSong(song_id2);
         song2.setUser_id(user_id);
+        save(song2);
+
         songVOList.add(toSongVO(song1));
         songVOList.add(toSongVO(song2));
 
-        save(song1);
-        save(song2);
+
 
         return ResultUtil.ok(songVOList);
     }
@@ -205,7 +209,7 @@ public class CreateController {
                 song = (net.sf.json.JSONObject) json.get(0);
             }
             status = song.getString("status");
-            thread.sleep(1000);
+            thread.sleep(8000);
             System.out.println("-----"+i+++"----");
         }while (!status.equals("complete")&&!status.equals("error"));
 
