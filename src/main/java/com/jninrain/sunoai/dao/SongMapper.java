@@ -32,7 +32,7 @@ public interface SongMapper extends Mapper<Song> {
     @Update("update Song set upvote_count = upvote_count+1 where id = #{id}")
     void upvote(String id);
 
-    @Update("update Song set upvote_count = upvote_count+1 where id = #{id}")
+    @Update("update Song set upvote_count = upvote_count-1 where id = #{id}")
     void cancelVote(String id);
 
 
