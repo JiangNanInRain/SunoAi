@@ -102,6 +102,9 @@ public class SongController {
         return ResultUtil.ok(songCardVO);
     }
 
+
+
+
     @ApiOperation("分页请求SongCard(可根据热度榜种类筛选)")
     @GetMapping("/querySongCardListByPage")
     public PageInfo<SongCardVO> querySongCardListByPage(HttpServletRequest httpServletRequest,Integer pageNum, Integer pageSize, @Param("NOW,WEEKLY,MONTHLY,ALLTIME字符串选择热度榜")  String hotDateType) throws ParseException {
@@ -317,7 +320,9 @@ public class SongController {
         songCardVO.setDisplay_name(display_name);
         songCardVO.setPlay_count(song.getPlay_count());
         songCardVO.setUpvote_count(song.getUpvote_count());
-       // songCardVO.setAudio_url(song.getAudio_url());
+        songCardVO.setImage_large_url(song.getImage_large_url());
+        songCardVO.setAudio_url(song.getAudio_url());
+        songCardVO.setLyrics(song.getLyrics());
 
         return songCardVO;
     }

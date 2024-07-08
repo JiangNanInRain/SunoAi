@@ -41,6 +41,15 @@ public class SongCardVO {
     private String display_name;
 
     @ApiModelProperty("是否已点赞")
-    private Boolean isLike;
+    private Boolean isLike  ;
+
+    @ApiModelProperty("歌词")
+    private String lyrics;
+
+    @ApiModelProperty("大图片")
+    private String image_large_url;
+
+    @ApiModelProperty("音频链接")
+    private String audio_url;
 
 }
