@@ -239,7 +239,7 @@ public class CreateController {
         songVO.setUser_id(song.getUser_id());
         songVO.setTitle(song.getTitle());
         songVO.setModel_version(song.getMajor_model_version());
-        songVO.setCreated_time(songVO.getCreated_time());
+        songVO.setCreated_time(new Date());
         songVO.setTags(song.getTags());
         songVO.setVideo_url(song.getVideo_url());
         songVO.setAudio_url(song.getAudio_url());
