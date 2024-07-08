@@ -19,4 +19,6 @@ public interface UserService {
     String getDisplayNameById(String id);
 
     boolean save(User user);
+
+    User getUserInfoByUserId(Long id);
 }

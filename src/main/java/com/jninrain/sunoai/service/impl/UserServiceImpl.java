@@ -42,5 +42,10 @@ public class UserServiceImpl implements UserService {
         return userMapper.insertSelective(user) > 0;
     }
 
+    @Override
+    public User getUserInfoByUserId(Long id) {
+        return userMapper.getUserInfoByUserId(id);
+    }
+
 
 }
