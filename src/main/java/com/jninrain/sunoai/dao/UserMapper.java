@@ -33,4 +33,8 @@ public interface UserMapper extends Mapper<User> {
 
     @Update("update User set password = #{password} where handle = #{userName} ")
     void updatePwd(@Param("userName") String userName,@Param("password") String password);
+
+
+    @Select("select email from User where handle = #{userName}")
+    String queryEmailByName(String userName);
 }

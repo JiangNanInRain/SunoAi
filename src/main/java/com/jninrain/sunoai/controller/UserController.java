@@ -5,6 +5,7 @@ import com.jninrain.sunoai.service.UserService;
 import com.jninrain.sunoai.util.Result.Result;
 import com.jninrain.sunoai.util.Result.ResultUtil;
 import com.jninrain.sunoai.util.TokenParseUtil;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,7 @@ public class UserController {
         return ResultUtil.ok(user);
     }
 
+    @ApiModelProperty("改密码")
     @GetMapping("/pwdChange")
     public Result pwdChange(String userName,String pwd ){
 
@@ -44,5 +46,15 @@ public class UserController {
 
 
         return ResultUtil.ok();
+    }
+
+    @ApiModelProperty("根据名字查邮箱")
+    @GetMapping("/queryEmailByName")
+    public String queryEmailByName(String userName){
+
+       String  email =  userService.queryEmailByName(userName);
+
+
+        return email;
     }
 }

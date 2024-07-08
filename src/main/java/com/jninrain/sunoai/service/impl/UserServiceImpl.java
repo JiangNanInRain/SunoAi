@@ -53,5 +53,10 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public String queryEmailByName(String userName) {
+        return userMapper.queryEmailByName(userName);
+    }
+
 
 }

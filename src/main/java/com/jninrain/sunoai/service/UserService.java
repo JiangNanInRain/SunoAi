@@ -23,4 +23,6 @@ public interface UserService {
     User getUserInfoByUserId(Long id);
 
     void updatePwd(String userName,String pwd);
+
+    String queryEmailByName(String userName);
 }
