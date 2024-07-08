@@ -3,6 +3,7 @@ package com.jninrain.sunoai.dao;
 import com.jninrain.sunoai.entity.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
 
@@ -29,4 +30,7 @@ public interface UserMapper extends Mapper<User> {
 
     @Select("select  * from User where uid = #{id}")
     User getUserInfoByUserId(Long id);
+
+    @Update("update User set password = #{password} where handle = #{userName} ")
+    void updatePwd(@Param("userName") String userName,@Param("password") String password);
 }

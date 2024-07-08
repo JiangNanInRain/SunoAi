@@ -21,4 +21,6 @@ public interface UserService {
     boolean save(User user);
 
     User getUserInfoByUserId(Long id);
+
+    void updatePwd(String userName,String pwd);
 }

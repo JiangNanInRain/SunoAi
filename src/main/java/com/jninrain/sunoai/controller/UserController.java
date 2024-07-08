@@ -36,4 +36,13 @@ public class UserController {
 
         return ResultUtil.ok(user);
     }
+
+    @GetMapping("/pwdChange")
+    public Result pwdChange(String userName,String pwd ){
+
+        userService.updatePwd(userName,pwd);
+
+
+        return ResultUtil.ok();
+    }
 }

@@ -141,9 +141,9 @@ public class SongController {
         String[] songIds = song_user_likeService.getSongIdListByUserId(Long.parseLong(user_id));
 
         for(String songId:songIds){
-            Boolean isLike = song_user_likeService.getLike(songId,user_id);
+            //Boolean isLike = song_user_likeService.getLike(songId,user_id);
             SongCardVO songCardVO = toSongCardVO( songService.getSongById(songId));
-            songCardVO.setIsLike(isLike);
+           // songCardVO.setIsLike(isLike);
             list.add(songCardVO);
         }
 
