@@ -33,4 +33,7 @@ public interface SongService {
     void upvote(String id);
 
     void cancelVote(String id);
+
+
+    String[] getSongIdListByUserId(Long id);
 }

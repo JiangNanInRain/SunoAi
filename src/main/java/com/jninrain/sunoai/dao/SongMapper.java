@@ -34,4 +34,8 @@ public interface SongMapper extends Mapper<Song> {
 
     @Update("update Song set upvote_count = upvote_count+1 where id = #{id}")
     void cancelVote(String id);
+
+
+    @Select("select id from Song where user_id = #{id}")
+    String[] getSongIdListByUserId(Long id);
 }

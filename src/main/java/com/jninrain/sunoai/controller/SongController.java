@@ -105,6 +105,7 @@ public class SongController {
 
 
 
+
     @ApiOperation("分页请求SongCard(可根据热度榜种类筛选)")
     @GetMapping("/querySongCardListByPage")
     public PageInfo<SongCardVO> querySongCardListByPage(HttpServletRequest httpServletRequest,Integer pageNum, Integer pageSize, @Param("NOW,WEEKLY,MONTHLY,ALLTIME字符串选择热度榜")  String hotDateType) throws ParseException {
@@ -129,6 +130,38 @@ public class SongController {
         PageInfo<SongCardVO> pageInfo = new PageInfo<SongCardVO>(list);
         return pageInfo;
     }
+
+    @ApiOperation("我的创作歌曲列表")
+    @GetMapping("/queryMySongCardList")
+    public Result<List<SongCardVO>> queryMySongCardList(HttpServletRequest httpServletRequest) throws ParseException {
+
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+
+
+        List<SongCardVO> list =  new ArrayList<>();
+
+
+
+
+        String[] songIds = songService.getSongIdListByUserId(Long.parseLong(user_id));
+
+
+
+        for(String songId:songIds){
+            Boolean isLike = song_user_likeService.getLike(songId,user_id);
+            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            songCardVO.setIsLike(isLike);
+            list.add(songCardVO);
+        }
+
+
+        return ResultUtil.ok(list);
+    }
+
+
+
+
+
     @ApiOperation("下载歌曲列表Excel")
     @GetMapping("/exportSongExcel")
     public Map<String, Object> exportSongExcel(HttpServletResponse response){

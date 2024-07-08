@@ -70,4 +70,9 @@ public class SongServiceImpl implements SongService {
     public void cancelVote(String id) {
         songMapper.cancelVote(id);
     }
+
+    @Override
+    public String[] getSongIdListByUserId(Long id) {
+        return songMapper.getSongIdListByUserId(id);
+    }
 }
