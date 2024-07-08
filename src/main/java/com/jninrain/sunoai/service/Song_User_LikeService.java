@@ -15,5 +15,5 @@ public interface Song_User_LikeService {
     void deleteLike(String song_id,String user_id);
     //查询
     boolean getLike(String song_id,String user_id);
-
+    String[] getSongIdListByUserId(Long id);
 }

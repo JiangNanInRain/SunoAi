@@ -131,6 +131,25 @@ public class SongController {
         return pageInfo;
     }
 
+
+    @ApiOperation("我的收藏歌曲列表")
+    @GetMapping("/queryMyLikeList")
+    public Result<List<SongCardVO>> queryMyLikeList(HttpServletRequest httpServletRequest) throws ParseException {
+        String user_id = TokenParseUtil.get(httpServletRequest.getHeader("token"),"uid");
+        List<SongCardVO> list = new ArrayList<>();
+
+        String[] songIds = song_user_likeService.getSongIdListByUserId(Long.parseLong(user_id));
+
+        for(String songId:songIds){
+            Boolean isLike = song_user_likeService.getLike(songId,user_id);
+            SongCardVO songCardVO = toSongCardVO(  SongParseUtil.queryOneSong(songId));
+            songCardVO.setIsLike(isLike);
+            list.add(songCardVO);
+        }
+
+        return ResultUtil.ok(list);
+    }
+
     @ApiOperation("我的创作歌曲列表")
     @GetMapping("/queryMySongCardList")
     public Result<List<SongCardVO>> queryMySongCardList(HttpServletRequest httpServletRequest) throws ParseException {

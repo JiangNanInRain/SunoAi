@@ -43,4 +43,9 @@ public class Song_User_LikeServiceImpl implements Song_User_LikeService {
         }
         return true;
     }
+
+    @Override
+    public String[] getSongIdListByUserId(Long id) {
+        return song_user_likeMapper.getSongIdListByUserId(id);
+    }
 }
